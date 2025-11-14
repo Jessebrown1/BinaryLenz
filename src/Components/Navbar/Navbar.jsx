@@ -63,14 +63,17 @@ export default function Navbar({
         </div>
 
         {/* HAMBURGER (MOBILE ONLY) */}
-        <button
-          ref={btnRef}
-          className="nav-toggle mobile-only"
-          aria-expanded={open}
-          onClick={() => setOpen(true)}
-        >
-          <span className="hamburger" />
-        </button>
+        {/* HAMBURGER (MOBILE ONLY) */}
+<button
+  ref={btnRef}
+  className="nav-toggle mobile-only"
+  aria-expanded={open}
+  aria-label={open ? "Close menu" : "Open menu"}
+  onClick={() => setOpen((s) => !s)}   // <-- toggle instead of setOpen(true)
+>
+  <span className={`hamburger ${open ? "open" : ""}`} />
+</button>
+
       </nav>
 
       {/* MOBILE MENU */}
