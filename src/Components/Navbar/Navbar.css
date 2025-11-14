@@ -1,0 +1,413 @@
+/* ---------------------------
+   Liquid glass navbar (drop-in)
+   Replace your existing .hero-nav-pill rules with this
+   --------------------------- */
+
+   :root{
+    --nav-pill-bg: rgba(255,255,255,0.04);
+    --nav-border: rgba(255,255,255,0.065);
+    --nav-accent1: rgba(124,58,237,0.12);
+    --nav-accent2: rgba(6,182,212,0.10);
+    --nav-shadow: 0 10px 30px rgba(2,6,23,0.55);
+  }
+  
+  /* core pill */
+  .hero-nav-pill {
+    pointer-events: auto;
+    position: fixed;               /* stays at top while scrolling */
+    top: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    width: calc(100% - 160px);    /* tweak breathing room */
+    max-width: 1100px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
+    border-radius: 36px;
+    border: 1px solid var(--nav-border);
+    box-shadow: var(--nav-shadow);
+    backdrop-filter: blur(12px) saturate(120%);
+    -webkit-backdrop-filter: blur(12px) saturate(120%);
+    overflow: hidden; /* clip pseudo-elements */
+    color: white;
+    padding: 12px 26px;
+    transition: transform .15s ease, box-shadow .18s ease;
+  }
+
+  .hero-nav-pill {
+    animation: navDrop 0.8s cubic-bezier(0.15, 0.85, 0.35, 1) forwards;
+    opacity: 0;
+    transform: translate(-50%, -20px); /* start slightly above */
+  }
+  
+  
+  /* subtle depth on hover */
+  .hero-nav-pill:hover {
+    transform: translateX(-50%) translateY(-2px);
+    box-shadow: 0 18px 50px rgba(2,6,23,0.6);
+  }
+  
+  /* soft colored halo (blended) */
+  .hero-nav-pill::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(600px 140px at 14% 30%, var(--nav-accent1), transparent 12%),
+      radial-gradient(500px 120px at 86% 70%, var(--nav-accent2), transparent 12%);
+    mix-blend-mode: screen;
+    opacity: 0.9;
+    filter: blur(18px) saturate(120%);
+  }
+  
+  /* animated sheen to feel liquid */
+  .hero-nav-pill::after {
+    content: "";
+    position: absolute;
+    top: -60%;
+    left: -40%;
+    width: 60%;
+    height: 220%;
+    pointer-events: none;
+    background:
+      linear-gradient(120deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.035) 25%, rgba(255,255,255,0.02) 50%, transparent 60%);
+    transform: rotate(-12deg);
+    opacity: 0.85;
+    mix-blend-mode: overlay;
+    animation: liquid-sheen 6.5s linear infinite;
+    will-change: transform, opacity;
+  }
+  
+  /* micro noise + shimmer (optional, subtle) */
+  .hero-nav-pill .glass-noise {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><filter id="n"><feTurbulence baseFrequency="0.8" numOctaves="1" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23n)" opacity="0.02" /></svg>');
+    mix-blend-mode: overlay;
+    opacity: 0.6;
+    z-index: 1;
+  }
+  
+  .nav-left {
+    margin-right: auto; /* pushes nav-right to the far right */
+    
+  }
+  
+  .nav-right {
+    margin-left: auto; /* ensures it stays to the right */
+    display: flex;
+    gap: 18px;
+    align-items: center;
+  }
+
+  
+  
+
+
+  /* --------------------
+  Responsive layout tweaks
+  -------------------- */
+
+/* Force left & right docking */
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-right: auto;    /* push nav-right to the far right on wide screens */
+    z-index: 3;
+  }
+  
+  .nav-right {
+    display: flex;
+    gap: 18px;
+    align-items: center;
+    margin-left: auto;     /* keep links to the right edge inside the pill */
+    z-index: 3;
+  }
+  
+  /* Brand icon (optional) */
+  .brand-icon {
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+    border-radius: 8px;
+    display: inline-block;
+    filter: drop-shadow(0 6px 16px rgba(2,6,23,0.45));
+  }
+  
+  /* Mobile / desktop visibility helpers (ensure earlier definitions kept) */
+  .desktop-only { display: flex; }
+  .mobile-only { display: none; }
+  
+  /* Ensure hamburger sits at the right on small screens */
+  .nav-toggle {
+    margin-left: 12px;
+    margin-right: 0;
+    display: none; /* hidden by default; shown on small screens by media query */
+    z-index: 4;    /* above sheen/pseudo elements */
+  }
+  
+  /* mobile menu overlay (improve UX) */
+  .mobile-menu {
+    pointer-events: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    transform: translateY(-6%);
+    transition: transform .28s cubic-bezier(.2,.9,.2,1), opacity .22s;
+    opacity: 0;
+    z-index: 995;
+  }
+  .mobile-menu.open {
+    pointer-events: auto;
+    transform: translateY(0);
+    opacity: 1;
+    background: linear-gradient(180deg, rgba(4,2,10,0.96), rgba(8,4,20,0.99));
+  }
+  
+  /* mobile menu inner */
+  .mobile-menu-inner {
+    padding: calc(var(--nav-height) + 12px) 20px 28px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+  }
+  
+  /* mobile menu link */
+  .mobile-link {
+    color: white;
+    text-decoration: none;
+    font-weight: 700;
+    padding: 12px 20px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.03);
+    width: 100%;
+    max-width: 520px;
+    text-align: center;
+  }
+  
+
+  .mobile-close-btn {
+    position: absolute;
+    top: 22px;
+    right: 22px;
+    background: rgba(255,255,255,0.08);
+    border: none;
+    font-size: 26px;
+    color: white;
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    cursor: pointer;
+    z-index: 999;
+  }
+  
+  .mobile-close-btn:hover {
+    background: rgba(255,255,255,0.12);
+  }
+
+  .brand-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    object-fit: cover;
+  }
+
+  .nav-toggle {
+    background: transparent;
+    border: none;
+    display: none;  /* DESKTOP HIDDEN */
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    cursor: pointer;
+    z-index: 3;
+  }
+  
+  
+  .hamburger {
+    width: 22px;
+    height: 2px;
+    background: white;
+    position: relative;
+  }
+  
+  .hamburger::before,
+  .hamburger::after {
+    content: "";
+    position: absolute;
+    width: 22px;
+    height: 2px;
+    background: white;
+    left: 0;
+  }
+  
+  .hamburger::before { top: -6px; }
+  .hamburger::after { top: 6px; }
+
+  
+
+  @media (max-width: 980px) {
+    .desktop-only { display: none !important; }
+    .mobile-only { display: inline-flex !important; }
+  
+    .hero-nav-pill {
+      width: calc(100% - 28px);
+      border-radius: 30px;
+      padding: 10px 16px;
+    }
+  
+    .brand-icon {
+      width: 26px;
+      height: 26px;
+    }
+  }
+  
+
+
+  /* ===== media queries ===== */
+  @media (max-width: 980px) {
+    /* pill becomes slightly tighter on mobile */
+    .hero-nav-pill {
+      width: calc(100% - 32px);
+      max-width: none;
+      padding: 10px 14px;
+      border-radius: 28px;
+      top: 12px;
+    }
+  
+    /* hide desktop links, show mobile toggle */
+    .desktop-only { display: none !important; }
+    .mobile-only  { display: inline-flex !important; }
+  
+    /* place hamburger at the far right inside the pill */
+    .nav-toggle {
+      display: inline-flex;
+      margin-left: auto;  /* pushes it to the right inside the pill */
+      background: rgba(255,255,255,0.03);
+      border-radius: 10px;
+      width: 44px;
+      height: 44px;
+      align-items: center;
+      justify-content: center;
+    }
+  
+    /* tighten brand presence on small screens */
+    .brand { font-size: 15px; font-weight: 700; }
+    .brand-icon { width: 28px; height: 28px; }
+  }
+  
+  /* keyboard focus & accessibility improvements */
+  .nav-toggle:focus, .nav-link:focus {
+    outline: 2px solid rgba(124,58,237,0.18);
+    outline-offset: 3px;
+    border-radius: 8px;
+  }
+  
+  /* ensure mobile menu sits above overlay sheen of pill (if any) */
+  .mobile-menu.open { z-index: 997; }
+  
+
+  /* sheen keyframes */
+  @keyframes liquid-sheen {
+    0%   { transform: translateX(-150%) rotate(-12deg); opacity: 0.18; }
+    40%  { transform: translateX(-10%) rotate(-12deg); opacity: 0.45; }
+    70%  { transform: translateX(40%) rotate(-12deg); opacity: 0.28; }
+    100% { transform: translateX(150%) rotate(-12deg); opacity: 0.16; }
+  }
+  
+  /* ensure nav internals sit above pseudo elements */
+  .nav-left, .nav-right, .nav-toggle {
+    position: relative;
+    z-index: 3;
+  }
+  
+  /* link styles (keep accessible & visible) */
+  .nav-link {
+    color: rgba(255,255,255,0.95);
+    text-decoration: none;
+    font-weight: 600;
+    padding: 8px 12px;
+    border-radius: 12px;
+    justify-content: space-between;
+
+    transition: background .14s ease, transform .08s ease;
+  }
+  .nav-link:hover {
+    background: linear-gradient(90deg, rgba(124,58,237,0.18), rgba(6,182,212,0.18));
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(6,182,212,0.22);
+  }
+  
+  
+  /* responsive adjustments */
+  @media (max-width: 980px) {
+    .hero-nav-pill { width: calc(100% - 32px); max-width: none; border-radius: 28px; top: 12px; padding: 10px 16px; }
+    .desktop-only { display: none; }
+    .mobile-only { display: inline-flex; }
+  }
+  
+
+  @keyframes navDrop {
+    0% {
+      opacity: 0;
+      transform: translate(-50%, -20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+  }
+
+  .nav-link {
+    opacity: 0;
+    transform: translateY(-6px);
+    animation: linkFade 0.6s ease forwards;
+  }
+  
+  /* stagger timing */
+  .nav-link:nth-child(1) { animation-delay: 0.50s; }
+  .nav-link:nth-child(2) { animation-delay: 0.65s; }
+  .nav-link:nth-child(3) { animation-delay: 0.80s; }
+  .nav-link:nth-child(4) { animation-delay: 0.95s; }
+  @keyframes linkFade {
+    0% {
+      opacity: 0;
+      transform: translateY(-6px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .mobile-link {
+    opacity: 0;
+    transform: translateY(14px);
+    animation: mobileLink 0.5s ease forwards;
+  }
+  
+  .mobile-link:nth-child(1) { animation-delay: 0.15s; }
+  .mobile-link:nth-child(2) { animation-delay: 0.27s; }
+  .mobile-link:nth-child(3) { animation-delay: 0.39s; }
+
+  @keyframes mobileLink {
+    0% {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
