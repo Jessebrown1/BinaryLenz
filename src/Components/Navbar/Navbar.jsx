@@ -2,12 +2,12 @@ import React, { useState, useEffect, useRef } from "react";
 import "./Navbar.css";
 
 export default function Navbar({
-  brand="BinaryLenz",
+  brand = "BinaryLenz",
   links = [
     { label: "Home", href: "#home" },
     { label: "About", href: "#about" },
     { label: "Portfolio", href: "#portfolio" },
-    { label: "Contact Us", href: "#contact" },
+    { label: "Contact", href: "#contact" },
   ],
   fixed = true,
 }) {
@@ -15,7 +15,6 @@ export default function Navbar({
   const menuRef = useRef(null);
   const btnRef = useRef(null);
 
-  // Close menu on outside click / ESC
   useEffect(() => {
     function onDocClick(e) {
       if (!menuRef.current) return;
@@ -34,9 +33,8 @@ export default function Navbar({
     };
   }, [open]);
 
-  // Disable body scroll when mobile menu is open
+  // prevent background scroll while menu open
   useEffect(() => {
-    if (typeof document === "undefined") return;
     document.body.style.overflow = open ? "hidden" : "";
     return () => {
       document.body.style.overflow = "";
@@ -46,14 +44,11 @@ export default function Navbar({
   return (
     <div className={`nav-wrapper ${fixed ? "nav-fixed" : "nav-absolute"}`}>
       <nav className="hero-nav-pill" role="navigation" aria-label="Main">
-
-        {/* LEFT SIDE – brand + icon */}
         <div className="nav-left">
-          <img src="/lenz.png" alt="Brand" className="brand-icon" /> 
+          <img src="/lenz.png" alt="Brand" className="brand-icon" />
           <div className="brand">{brand}</div>
         </div>
 
-        {/* DESKTOP LINKS */}
         <div className="nav-right desktop-only" role="menubar">
           {links.map((link, i) => (
             <a key={i} className="nav-link" href={link.href}>
@@ -62,28 +57,24 @@ export default function Navbar({
           ))}
         </div>
 
-        {/* HAMBURGER (MOBILE ONLY) */}
-        {/* HAMBURGER (MOBILE ONLY) */}
-<button
-  ref={btnRef}
-  className="nav-toggle mobile-only"
-  aria-expanded={open}
-  aria-label={open ? "Close menu" : "Open menu"}
-  onClick={() => setOpen((s) => !s)}   // <-- toggle instead of setOpen(true)
->
-  <span className={`hamburger ${open ? "open" : ""}`} />
-</button>
-
+        <button
+          ref={btnRef}
+          className="nav-toggle mobile-only"
+          aria-expanded={open}
+          aria-label={open ? "Close menu" : "Open menu"}
+          onClick={() => setOpen((s) => !s)}
+        >
+          <span className={`hamburger ${open ? "open" : ""}`} />
+        </button>
       </nav>
 
-      {/* MOBILE MENU */}
       <div
         ref={menuRef}
         className={`mobile-menu ${open ? "open" : ""}`}
         role="dialog"
         aria-modal="true"
+        aria-hidden={!open}
       >
-        {/* CLOSE BUTTON */}
         <button
           className="mobile-close-btn"
           onClick={() => setOpen(false)}
@@ -99,6 +90,7 @@ export default function Navbar({
               className="mobile-link"
               href={l.href}
               onClick={() => setOpen(false)}
+              style={{ transitionDelay: `${0.08 + i * 0.08}s` }} // JS fallback for stagger
             >
               {l.label}
             </a>
