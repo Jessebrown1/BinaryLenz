@@ -270,4 +270,704 @@
   }
 }
 
+/* === Scroll-trigger glue (add to Home.css) === */
+
+/* initial hidden state for controlled elements */
+.reveal-init {
+  opacity: 0 !important;
+  transform: translateY(18px) scale(.998) !important;
+  filter: blur(6px) !important;
+  will-change: transform, opacity, filter !important;
+}
+
+/* when the JS adds .in-view, run your existing premium animations */
+/* HERO */
+.hero .badge.in-view {
+  animation: premiumLeadIn 720ms cubic-bezier(.18,.88,.32,1) 0ms both;
+}
+.hero .hero-title.in-view {
+  animation: premiumLeadIn 820ms cubic-bezier(.18,.88,.32,1) 0ms both;
+}
+.hero .hero-sub.in-view {
+  animation: premiumLeadIn 760ms cubic-bezier(.18,.88,.32,1) 0ms both;
+}
+.hero .hero-ctas .btn.in-view {
+  animation: premiumLeadIn 720ms cubic-bezier(.18,.88,.32,1) 0ms both;
+}
+
+/* CARDS (uses stagger via inline style.animationDelay set by JS) */
+.services .card.in-view {
+  animation: cardPremiumIn 820ms cubic-bezier(.18,.88,.32,1) both;
+  /* animation-delay will be set inline by JS for staggering */
+}
+
+/* WHY tiles */
+.why-list li.in-view {
+  animation: premiumLeadIn 580ms cubic-bezier(.18,.88,.32,1) both;
+}
+
+/* FEATURED */
+.featured-thumb.in-view {
+  animation: premiumLeadIn 760ms cubic-bezier(.18,.88,.32,1) both;
+}
+.featured-text.in-view {
+  animation: premiumLeadIn 760ms cubic-bezier(.18,.88,.32,1) both;
+}
+.featured-actions .btn.in-view {
+  animation: premiumLeadIn 640ms cubic-bezier(.18,.88,.32,1) both;
+}
+
+/* FINAL CTA */
+.home-footer .cta-title.in-view {
+  animation: premiumLeadIn 720ms cubic-bezier(.18,.88,.32,1) both;
+}
+.home-footer .btn.large.in-view {
+  animation: premiumLeadIn 760ms cubic-bezier(.18,.88,.32,1) both;
+}
+
+/* Respect reduced motion — skip animations entirely */
+@media (prefers-reduced-motion: reduce) {
+  .reveal-init, .in-view {
+    animation: none !important;
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+}
+
+
   
+
+
+
+
+
+/* SECTIONS */
+.section {
+  padding: 80px 20px;
+}
+.section-title {
+  font-size: 2.4rem;
+  text-align: center;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+.section-sub {
+  text-align: center;
+  opacity: 0.8;
+  max-width: 700px;
+  margin: 0 auto 40px auto;
+}
+
+/* SERVICES GRID */
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 25px;
+  margin-top: 30px;
+}
+.service-card {
+  background: rgba(255, 255, 255, 0.06);
+  padding: 25px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  transition: 0.3s;
+}
+.service-card:hover {
+  transform: translateY(-6px);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* WHY US */
+.why-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 25px;
+  margin-top: 30px;
+}
+.why-card {
+  background: rgba(255, 255, 255, 0.06);
+  padding: 25px;
+  border-radius: 12px;
+  backdrop-filter: blur(12px);
+  transition: 0.3s;
+}
+.why-card h3 {
+  font-weight: 600;
+}
+.why-card p {
+  opacity: 0.85;
+  margin-top: 5px;
+}
+
+/* TEAM */
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 25px;
+  margin-top: 30px;
+}
+.team-card {
+  background: rgba(255, 255, 255, 0.07);
+  padding: 20px;
+  border-radius: 14px;
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.team-card h3 {
+  margin-bottom: 10px;
+}
+
+/* INDUSTRIES */
+.industries-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+  margin-top: 20px;
+}
+.industry {
+  background: rgba(255, 255, 255, 0.07);
+  padding: 10px 18px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(10px);
+}
+
+/* CTA */
+.cta {
+  text-align: center;
+  margin-top: 80px;
+}
+.cta-btn {
+  margin-top: 20px;
+  font-size: 1.1rem;
+  padding: 14px 28px;
+}
+
+/* PROCESS */
+.process-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+.process-step {
+  background: rgba(255, 255, 255, 0.07);
+  padding: 1.5rem;
+  border-radius: 14px;
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  text-align: center;
+}
+.step-number {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #7c3aed;
+}
+.process-title {
+  margin-top: 0.5rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+.process-desc {
+  opacity: 0.85;
+  margin-top: 0.4rem;
+}
+
+/* TESTIMONIALS */
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+.testimonial-card {
+  background: rgba(255, 255, 255, 0.08);
+  padding: 1.8rem;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+}
+.testimonial-text {
+  font-size: 0.95rem;
+  line-height: 1.5rem;
+  opacity: 0.9;
+}
+.testimonial-name {
+  margin-top: 1rem;
+  font-weight: 600;
+  color: #06b6d4;
+}
+
+/* TECH STACK */
+.tech-list {
+  margin-top: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  list-style: none;
+  padding: 0;
+  justify-content: center;
+}
+.tech-list li {
+  padding: 0.6rem 1rem;
+  background: rgba(255, 255, 255, 0.07);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(10px);
+  font-size: 0.95rem;
+}
+
+
+
+
+
+
+
+
+
+
+/* =========================================
+   GLOBAL BASE
+========================================= */
+:root {
+  --accent1: #7c3aed;
+  --accent2: #06b6d4;
+  --panel: rgba(255,255,255,0.06);
+  --border: rgba(255,255,255,0.12);
+  --text-soft: rgba(255,255,255,0.82);
+  --text-muted: rgba(255,255,255,0.65);
+
+  /* Big + fluid typography */
+  --fs-title: clamp(2.2rem, 4vw, 2.6rem);
+  --fs-sub: clamp(1.1rem, 1.8vw, 1.25rem);
+  --fs-card-title: clamp(1.25rem, 1.8vw, 1.4rem);
+  --fs-card-text: clamp(1rem, 1.5vw, 1.1rem);
+  --fs-cta: clamp(2rem, 4vw, 2.4rem);
+}
+
+.section {
+  padding: 90px 22px;
+  text-align: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* =========================================
+   SECTION TITLES
+========================================= */
+.section-title {
+  font-size: var(--fs-title);
+  font-weight: 800;
+  margin-bottom: 18px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  background: linear-gradient(90deg, var(--accent1), var(--accent2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  display: inline-block;
+  position: relative;
+}
+
+.section-title::after {
+  content: "";
+  display: block;
+  width: 80px;
+  height: 4px;
+  margin: 12px auto 0;
+  background: linear-gradient(90deg, var(--accent1), var(--accent2));
+  border-radius: 4px;
+}
+
+.section-sub {
+  font-size: var(--fs-sub);
+  color: var(--text-soft);
+  max-width: 760px;
+  margin: 0 auto 40px;
+  line-height: 1.6;
+}
+
+/* =========================================
+   SERVICES GRID
+========================================= */
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 28px;
+}
+
+.service-card {
+  padding: 30px;
+  background: var(--panel);
+  backdrop-filter: blur(14px);
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  transition: 0.35s ease;
+  cursor: default;
+}
+
+.service-card h3 {
+  font-size: var(--fs-card-title);
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.service-card p {
+  font-size: var(--fs-card-text);
+  color: var(--text-muted);
+  line-height: 1.55;
+}
+
+.service-card:hover {
+  transform: translateY(-8px);
+  background: rgba(255,255,255,0.12);
+}
+
+/* =========================================
+   FEATURED PROJECTS
+========================================= */
+.featured-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 28px;
+}
+
+.featured-card {
+  padding: 32px;
+  background: rgba(255, 255, 255, 0.07);
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  backdrop-filter: blur(14px);
+  transition: 0.33s ease;
+}
+
+.featured-card h3 {
+  font-size: var(--fs-card-title);
+  margin-bottom: 10px;
+}
+
+.featured-card p {
+  font-size: var(--fs-card-text);
+  color: var(--text-muted);
+}
+
+.featured-card:hover {
+  transform: translateY(-10px);
+}
+
+/* =========================================
+   WHY US
+========================================= */
+.why-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 28px;
+}
+
+.why-card {
+  padding: 28px;
+  border-radius: 16px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(14px);
+  transition: 0.35s ease;
+}
+
+.why-card h3 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.why-card p {
+  font-size: 1.05rem;
+  color: var(--text-muted);
+}
+
+.why-card:hover {
+  transform: translateY(-8px);
+  background: rgba(255,255,255,0.12);
+}
+
+/* =========================================
+   CTA SECTION
+========================================= */
+.cta-title {
+  font-size: var(--fs-cta);
+  font-weight: 800;
+  margin-bottom: 20px;
+  line-height: 1.2;
+}
+
+.cta-btn {
+  margin-top: 18px;
+  padding: 16px 34px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--accent2), var(--accent1));
+  color: white;
+  display: inline-block;
+  transition: 0.25s ease;
+}
+
+.cta-btn:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 28px rgba(0,0,0,0.35);
+}
+
+/* =========================================
+   ANIMATIONS (Soft Reveal)
+========================================= */
+
+@keyframes fadeUp {
+  0% { opacity: 0; transform: translateY(24px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.section-title,
+.section-sub,
+.service-card,
+.featured-card,
+.why-card,
+.cta-title,
+.cta-btn {
+  animation: fadeUp 0.9s ease forwards;
+  opacity: 0;
+}
+
+.service-card:nth-child(1),
+.featured-card:nth-child(1),
+.why-card:nth-child(1) { animation-delay: 0.1s; }
+
+.service-card:nth-child(2),
+.featured-card:nth-child(2),
+.why-card:nth-child(2) { animation-delay: 0.2s; }
+
+.service-card:nth-child(3),
+.featured-card:nth-child(3),
+.why-card:nth-child(3) { animation-delay: 0.3s; }
+
+/* =========================================
+   RESPONSIVENESS
+========================================= */
+
+/* Tablets */
+@media (max-width: 900px) {
+  .section {
+    padding: 70px 18px;
+  }
+}
+
+/* Small Mobile */
+@media (max-width: 500px) {
+
+  .section {
+    padding: 60px 16px;
+  }
+
+  .section-title {
+    letter-spacing: 0.08em;
+  }
+
+  .cta-btn {
+    width: 100%;
+    max-width: 360px;
+  }
+}
+
+
+
+/* =========================
+   PREMIUM ANIMATIONS + MOTION
+   Paste into Home.css (append or replace existing animation blocks)
+   ========================= */
+
+/* small helpers */
+:root {
+  --accent1: #7c3aed;
+  --accent2: #06b6d4;
+  --glass: rgba(255,255,255,0.06);
+  --glass-strong: rgba(255,255,255,0.12);
+  --muted: rgba(255,255,255,0.75);
+  --soft: rgba(255,255,255,0.86);
+  --shadow-strong: 0 12px 40px rgba(6,12,30,0.45);
+}
+
+/* -------------------------
+   Motion-friendly defaults
+   ------------------------- */
+* { transition-timing-function: cubic-bezier(.18,.88,.32,1); }
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
+}
+
+/* =========================
+   HERO MICRO-MOTION
+   subtle floating + glow (Apple-like)
+   ========================= */
+.hero {
+  will-change: transform, opacity;
+  perspective: 1000px;
+}
+
+/* gentle parallax float for the hero title */
+@keyframes heroFloat {
+  0%   { transform: translateY(0px) translateZ(0); }
+  50%  { transform: translateY(-6px) translateZ(0); }
+  100% { transform: translateY(0px) translateZ(0); }
+}
+.hero-title {
+  animation: heroFloat 8s ease-in-out infinite;
+  text-rendering: optimizeLegibility;
+}
+
+/* soft, layered glow behind hero title (via pseudo) */
+.hero-title::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: -30px;
+  width: 360px;
+  height: 110px;
+  pointer-events: none;
+  filter: blur(36px);
+  opacity: 0.15;
+  background: radial-gradient(closest-side, rgba(124,58,237,0.65), rgba(6,182,212,0.25), transparent 60%);
+  border-radius: 50%;
+  z-index: -1;
+}
+
+/* CTA micro-interactions */
+.cta-btn, .btn.primary {
+  transition: transform .28s var(--hero-ease), box-shadow .28s var(--hero-ease), opacity .28s;
+  will-change: transform, box-shadow;
+}
+.cta-btn:hover, .btn.primary:hover {
+  transform: translateY(-6px) scale(1.01);
+  box-shadow: 0 18px 48px rgba(6,12,30,0.46);
+}
+
+/* subtle border shimmer on hover for glass cards */
+.service-card, .featured-card, .why-card, .team-card {
+  position: relative;
+  overflow: hidden;
+}
+.service-card::before, .featured-card::before, .why-card::before {
+  content: "";
+  position: absolute;
+  inset: -40%;
+  background: linear-gradient(120deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.045) 50%, rgba(255,255,255,0.02) 100%);
+  transform: rotate(-18deg) translateX(-100%);
+  transition: transform .9s cubic-bezier(.18,.88,.32,1);
+  pointer-events: none;
+}
+.service-card:hover::before, .featured-card:hover::before, .why-card:hover::before {
+  transform: rotate(-18deg) translateX(30%);
+}
+
+/* =========================
+   SCROLL REVEAL ANIMATIONS
+   (use .reveal-init on elements to hide initially)
+   IntersectionObserver will add .in-view to play animation
+   ========================= */
+
+/* base hidden state (non-destructive) */
+.reveal-init {
+  opacity: 0;
+  transform: translateY(18px) scale(.998);
+  filter: blur(6px);
+  transition: opacity .7s cubic-bezier(.18,.88,.32,1), transform .7s cubic-bezier(.18,.88,.32,1), filter .7s;
+  will-change: transform, opacity, filter;
+}
+
+/* in-view state (play) */
+.reveal-init.in-view {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  filter: blur(0);
+}
+
+/* different durations & styles for variety */
+.reveal-slow { transition-duration: 1s; }
+.reveal-fast { transition-duration: 0.55s; }
+
+/* card pop */
+@keyframes cardPop {
+  0% { opacity: 0; transform: translateY(18px) scale(.995); filter: blur(6px); }
+  60% { opacity: 1; transform: translateY(6px) scale(1.003); filter: blur(2px); }
+  100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+}
+.reveal-card.in-view { animation: cardPop .78s cubic-bezier(.18,.88,.32,1) both; }
+
+/* text soft slide */
+@keyframes textRise {
+  0% { opacity: 0; transform: translateY(12px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.reveal-text.in-view { animation: textRise .68s cubic-bezier(.18,.88,.32,1) both; }
+
+/* stagger utilities: add style="--d:0.12s" inline to fine-tune */
+.reveal-init { transition-delay: var(--d, 0s); }
+
+/* =========================
+   MICRO UI ANIMATIONS
+   ========================= */
+
+/* Animated gradient underline on section-title */
+.section-title {
+  position: relative;
+  overflow: visible;
+}
+.section-title::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%) scaleX(0);
+  bottom: -14px;
+  width: 120px;
+  height: 4px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--accent1), var(--accent2));
+  transform-origin: center;
+  transition: transform .55s cubic-bezier(.18,.88,.32,1), opacity .55s;
+  opacity: 0.95;
+}
+.section-title.revealed::after { transform: translateX(-50%) scaleX(1); }
+
+/* small icon/pulse for trust row if present */
+.trust-dot { opacity: .86; margin: 0 8px; }
+
+/* subtle floating for featured card media (if you add images later) */
+.featured-media { transition: transform .9s cubic-bezier(.18,.88,.32,1); will-change: transform; }
+.featured-card:hover .featured-media { transform: translateY(-8px) scale(1.02); }
+
+/* =========================
+   PERFORMANCE SAFEGUARDS
+   ========================= */
+@media (max-width: 640px) {
+  .hero-title::after { display: none; } /* hide heavy blur on small screens */
+  .service-card::before, .featured-card::before, .why-card::before { display: none; } /* avoid extra repaints */
+  .hero-title { animation: none; } /* simplify motion */
+}
+
+/* =========================
+   APPLY REVEAL CLASSES (defaults)
+   Add .reveal-init to elements in markup or let the JS observe selectors
+   ========================= */
+
+/* examples: make section titles and cards reveal nicely */
+.section-title { opacity: 0; transform: translateY(10px); }
+.section-title.in-view, .section-title.revealed { opacity: 1; transform: translateY(0); transition: opacity .7s, transform .7s; }
+.service-card { opacity: 0; transform: translateY(18px); }
+.service-card.in-view { opacity: 1; transform: translateY(0); transition: all .7s cubic-bezier(.18,.88,.32,1); }
+.featured-card.in-view { opacity: 1; transform: translateY(0); transition: all .75s cubic-bezier(.18,.88,.32,1); }
+.why-card.in-view { opacity: 1; transform: translateY(0); transition: all .75s cubic-bezier(.18,.88,.32,1); }
+
+/* ease the initial page-load hero animations already defined earlier in your CSS */
+.hero .hero-title, .hero .hero-sub, .hero .hero-ctas .btn { will-change: transform, opacity; }
