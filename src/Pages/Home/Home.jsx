@@ -1,6 +1,7 @@
 import React from "react";
 import LiquidEther from "../../Components/LiquidEther/LiquidEther"; 
 import "./Home.css";
+import { TestimonialsSection } from "../../Components/Testimonials/TestimonialsSection";
 
 export default function Home() {
   return (
@@ -134,6 +135,18 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+
+        <TestimonialsSection
+  title="Trusted by developers worldwide"
+  description="Join thousands of developers who are already building the future with our platform."
+  testimonials={[
+    { author: { name: "Emma Thompson", handle: "emmaai", avatar: "/images/testi-1.jpg" }, text: "Using this AI platform has transformed how we handle data analysis. The speed and accuracy are unprecedented." },
+    { author: { name: "David Park", handle: "davidtech", avatar: "/images/testi-2.jpg" }, text: "The API integration is flawless. We've reduced our development time by 60% since implementing this solution." },
+    { author: { name: "Sofia Rodriguez", handle: "sofiaml", avatar: "/images/testi-3.jpg" }, text: "Finally, an AI tool that actually understands context! The accuracy in natural language processing is impressive." }
+  ]}
+/>
+
 
 
         {/* ⭐ ADDED — FINAL CTA */}
