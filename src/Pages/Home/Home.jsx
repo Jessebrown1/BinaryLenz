@@ -149,11 +149,18 @@ export default function Home() {
 
 
 
-        {/* ⭐ ADDED — FINAL CTA */}
-        <section className="section cta">
-          <h2 className="cta-title">Let’s build something amazing together.</h2>
-          <a className="btn primary cta-btn" href="#contact">Start Now</a>
-        </section>
+<section className="section cta">
+  <span className="cta-badge">Ready?</span>
+  <h2 className="cta-title">Let’s build something amazing together.</h2>
+  <div className="cta-decor" aria-hidden />
+  
+<button id="techButton">
+  Contact Us
+</button>
+
+  <p className="cta-note">We’ll jump on a 15-minute call to scope your idea and share a fast plan.</p>
+</section>
+
 
 
       </div>

@@ -696,28 +696,208 @@
 /* =========================================
    CTA SECTION
 ========================================= */
+/* =========================
+   PREMIUM CTA (copy into Home.css)
+   ========================= */
+
+/* CTA container */
+.section.cta {
+  padding: 6rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+
+  position: relative;
+  overflow: visible;
+}
+
+/* Big headline */
 .cta-title {
-  font-size: var(--fs-cta);
+  font-size: clamp(1.75rem, 3.8vw, 2.6rem); /* fluid */
+  line-height: 1.06;
   font-weight: 800;
-  margin-bottom: 20px;
-  line-height: 1.2;
-}
-
-.cta-btn {
-  margin-top: 18px;
-  padding: 16px 34px;
-  font-size: 1.2rem;
-  font-weight: 700;
-  border-radius: 999px;
-  background: linear-gradient(90deg, var(--accent2), var(--accent1));
+  margin: 0;
+  text-align: center;
+  max-width: 940px;
   color: white;
-  display: inline-block;
-  transition: 0.25s ease;
+  letter-spacing: -0.01em;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  /* subtle reveal */
+  opacity: 0;
+  transform: translateY(12px);
+  animation: ctaReveal .72s cubic-bezier(.18,.88,.32,1) .08s forwards;
 }
 
-.cta-btn:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 28px rgba(0,0,0,0.35);
+/* optional small lead-in accent above headline (uncomment HTML if you want it) */
+.cta-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.04);
+  color: rgba(255,255,255,0.9);
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.82rem;
+  letter-spacing: 0.02em;
+  margin-bottom: 6px;
+  box-shadow: 0 6px 22px rgba(3,6,15,0.48);
+}
+
+/* CTA button (primary) */
+.cta-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 16px 36px;
+  min-height: 56px;
+  border-radius: 999px;
+  font-weight: 800;
+  font-size: clamp(1rem, 2.2vw, 1.12rem);
+  text-decoration: none;
+  color: #051025;
+  background: linear-gradient(90deg, var(--accent2), var(--accent1));
+  box-shadow: 0 10px 32px rgba(6,12,30,0.44);
+  border: 1px solid rgba(255,255,255,0.04);
+  transition: transform .28s cubic-bezier(.2,.9,.28,1), box-shadow .28s, opacity .18s;
+  will-change: transform, box-shadow;
+  outline: none;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(10px);
+  animation: ctaReveal .72s cubic-bezier(.18,.88,.32,1) .18s forwards;
+}
+
+/* optional chevron/icon inside button (if you use an <svg> or icon) */
+.cta-btn .btn-icon {
+  width: 18px;
+  height: 18px;
+  display: inline-block;
+  transform: translateX(0);
+  transition: transform .28s cubic-bezier(.18,.88,.32,1);
+}
+
+/* hover/focus */
+.cta-btn:hover,
+.cta-btn:focus {
+  transform: translateY(-6px) scale(1.01);
+  box-shadow: 0 22px 66px rgba(6,12,30,0.48);
+  text-decoration: none;
+}
+
+/* focus-visible for accessibility */
+.cta-btn:focus-visible {
+  box-shadow: 0 6px 24px rgba(7,10,30,0.36), 0 0 0 4px rgba(124,58,237,0.12);
+  border-color: rgba(255,255,255,0.14);
+}
+
+/* small micro interaction: icon slide on hover */
+.cta-btn:hover .btn-icon { transform: translateX(6px); }
+
+/* secondary (ghost) style if needed */
+.cta-btn.ghost {
+  background: transparent;
+  color: white;
+  border: 1px solid rgba(255,255,255,0.12);
+  box-shadow: none;
+}
+
+/* hint text under CTA (optional) */
+.cta-note {
+  font-size: 0.95rem;
+  color: rgba(255,255,255,0.72);
+  max-width: 780px;
+  text-align: center;
+  margin-top: 6px;
+  line-height: 1.5;
+  opacity: 0;
+  transform: translateY(8px);
+  animation: ctaReveal .72s cubic-bezier(.18,.88,.32,1) .26s forwards;
+}
+
+/* subtle decorative underline (thin accent) */
+.cta-decor {
+  width: 84px;
+  height: 4px;
+  border-radius: 6px;
+  margin-top: 6px;
+  background: linear-gradient(90deg, rgba(6,182,212,0.95), rgba(124,58,237,0.95));
+  box-shadow: 0 8px 28px rgba(7,10,30,0.22);
+  opacity: 0.95;
+}
+
+
+#techButton {
+  width: 10em;
+  position: relative;
+  height: 3.5em;
+  border: 3px ridge #149CEA;
+  outline: none;
+  background-color: transparent;
+  color: white;
+  transition: 1s;
+  border-radius: 0.3em;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* top */
+#techButton::after {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 3%;
+  width: 95%;
+  height: 40%;
+  background-color: transparent; /* FIXED */
+  transition: 0.5s;
+  transform-origin: center;
+}
+
+/* bottom */
+#techButton::before {
+  content: "";
+  transform-origin: center;
+  position: absolute;
+  top: 80%;
+  left: 3%;
+  width: 95%;
+  height: 40%;
+  background-color: transparent; /* FIXED */
+  transition: 0.5s;
+}
+
+#techButton:hover::before,
+#techButton:hover::after {
+  transform: scale(0);
+}
+
+#techButton:hover {
+  box-shadow: inset 0px 0px 25px #1479EA;
+}
+
+
+/* reveal keyframe */
+@keyframes ctaReveal {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* smaller screens: stack and scale */
+@media (max-width: 720px) {
+  .section.cta { padding: 3.5rem 18px; gap: 12px; }
+  .cta-title { font-size: clamp(1.35rem, 6.5vw, 1.85rem); }
+  .cta-btn { padding: 14px 22px; width: 100%; max-width: 420px; font-size: 1rem; min-height: 48px; }
+  .cta-decor { width: 56px; height: 3px; }
+}
+
+/* very small devices */
+@media (max-width: 420px) {
+  .section.cta { padding: 2.5rem 12px; }
+  .cta-title { font-size: 1.2rem; }
+  .cta-note { font-size: 0.9rem; }
 }
 
 /* =========================================
@@ -1038,7 +1218,7 @@
   /* Horizontal loop animation */
   will-change: transform;
   animation: marqueeAnim linear infinite;
-  animation-duration: 36s; /* ← lower = faster, increase for slower */
+  animation-duration: 17s; /* ← lower = faster, increase for slower */
   padding: 12px 0;
 }
 
@@ -1205,7 +1385,7 @@
 
 @media (max-width: 640px) {
   .marquee-track {
-    animation-duration: 28s; /* faster on small screens (tweak as desired) */
+    animation-duration: 12s; /* faster on small screens (tweak as desired) */
     gap: 12px;
   }
 
