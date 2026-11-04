@@ -73,3 +73,16 @@ export const process = [
   { title: "Build", text: "We develop and test in small steps, and share progress as we go." },
   { title: "Launch", text: "We ship to the app stores or the web, then keep it running." },
 ];
+
+export const offers = [
+  {
+    title: "Mobile Apps",
+    text: "Native-quality apps for iPhone and Android, from first idea to store release.",
+    points: ["iOS and Android", "App design and development", "Backend and admin tools"],
+  },
+  {
+    title: "Websites",
+    text: "Any type of website, designed from scratch and built to perform.",
+    points: ["Business sites and landing pages", "Online stores and booking", "Web apps and platforms"],
+  },
+];

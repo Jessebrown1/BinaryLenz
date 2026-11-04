@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import { prefersReducedMotion } from "../data/binary";
 
-const TARGETS = "main h1, main h2, main h3, main p, main legend, main .btn, main .text-link, main .project-category, main .contact-direct span, main .contact-direct a";
+const TARGETS = "main h1, main h2, main h3, main p, main legend, main li, main .offer-more, main .btn, main .text-link, main .project-category, main .contact-direct span, main .contact-direct a";
 // Keep anything people must be able to read or press at the very end of a page
-const SKIP = ".cta, .not-found, .contact-form, .project-bits";
+const SKIP = ".cta, .not-found, .contact-form, .project-bits, .devices";
 
 const START = 0.3; // element top at 30% of the screen: first letters flip
 const END = 0.1; // element top at 10%, just under the nav: all binary

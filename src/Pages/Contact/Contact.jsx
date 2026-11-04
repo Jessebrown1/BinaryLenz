@@ -6,18 +6,42 @@ import "../Pages.css";
 
 const projectTypes = ["Mobile app", "Website", "Web platform", "Online store", "Not sure yet"];
 
+// Google Apps Script URL. See google-apps-script/README.md
+const endpoint = import.meta.env.VITE_CONTACT_ENDPOINT;
+
 export default function Contact() {
   const [name, setName] = useState("");
-  const [sent, setSent] = useState(false);
+  const [status, setStatus] = useState("idle"); // idle, sending, sent, email, error
 
-  // No backend yet: hand the message to the visitor's email app.
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    const { email, type, message } = Object.fromEntries(new FormData(e.currentTarget));
-    const subject = `Project enquiry: ${type}`;
-    const body = `${message}\n\nFrom: ${name} (${email})`;
-    window.location.href = `mailto:${site.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    setSent(true);
+    const form = e.currentTarget;
+    const data = Object.fromEntries(new FormData(form));
+
+    if (!endpoint) {
+      const subject = `Project enquiry: ${data.type}`;
+      const body = `${data.message}\n\nFrom: ${data.name} (${data.email})`;
+      window.location.href = `mailto:${site.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      setStatus("email");
+      return;
+    }
+
+    setStatus("sending");
+    try {
+      // text/plain keeps this a simple request, which Apps Script can answer across origins
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(data),
+      });
+      const result = await response.json();
+      if (!result.ok) throw new Error(result.error);
+      form.reset();
+      setName("");
+      setStatus("sent");
+    } catch {
+      setStatus("error"); // the typed message stays in the form so nothing is lost
+    }
   }
 
   return (
@@ -65,8 +89,24 @@ export default function Contact() {
 
           <p className="name-bits" aria-hidden="true">{name ? toBinary(name.slice(0, 24)) : BRAND_BITS}</p>
 
-          <button className="btn primary" type="submit">Send Enquiry</button>
-          {sent && <p className="contact-status" role="status">Your email app should now open with this message ready to send.</p>}
+          <label className="field-trap" aria-hidden="true">
+            Website
+            <input name="website" tabIndex={-1} autoComplete="off" />
+          </label>
+
+          <button className="btn primary" type="submit" disabled={status === "sending"}>
+            {status === "sending" ? "Sending…" : "Send Enquiry"}
+          </button>
+
+          <div role="status">
+            {status === "sent" && <p className="contact-status">Thank you. Your enquiry has been received and we’ll be in touch soon.</p>}
+            {status === "email" && <p className="contact-status">Your email app should now open with this message ready to send.</p>}
+            {status === "error" && (
+              <p className="contact-status error">
+                Sorry, that didn’t send. Please try again, or email us at <a href={`mailto:${site.email}`}>{site.email}</a>.
+              </p>
+            )}
+          </div>
         </Reveal>
       </section>
     </>
