@@ -7,8 +7,8 @@ export function TestimonialCard({ author = {}, text = "" }) {
     <article className="testimonial-card" role="article" aria-label={`Testimonial by ${name}`}>
       <div className="testimonial-inner">
         <div className="testimonial-top">
-          <div className="testimonial-avatar">
-            {avatar ? <img src={avatar} alt={`${name} avatar`} /> : <div className="avatar-fallback">{name.slice(0,1)}</div>}
+          <div className="testimonial-avatar-wrap">
+            {avatar ? <img className="testimonial-avatar" src={avatar} alt={`${name} avatar`} /> : <div className="testimonial-avatar placeholder">{name.slice(0,1)}</div>}
           </div>
           <div className="testimonial-author">
             <div className="author-name">{name}</div>

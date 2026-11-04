@@ -1,14 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
+import { Link, NavLink } from "react-router-dom";
+import { navLinks } from "../../data/site";
 import "./Navbar.css";
 
 export default function Navbar({
   brand = "BinaryLenz",
-  links = [
-    { label: "Home", href: "#home" },
-    { label: "About", href: "#about" },
-    { label: "Portfolio", href: "#portfolio" },
-    { label: "Contact", href: "#contact" },
-  ],
+  links = navLinks,
   fixed = true,
 }) {
   const [open, setOpen] = useState(false);
@@ -44,16 +41,16 @@ export default function Navbar({
   return (
     <div className={`nav-wrapper ${fixed ? "nav-fixed" : "nav-absolute"}`}>
       <nav className="hero-nav-pill" role="navigation" aria-label="Main">
-        <div className="nav-left">
-          <img src="/lenz.png" alt="Brand" className="brand-icon" />
+        <Link className="nav-left" to="/">
+          <img src="/lenz.png" alt="" className="brand-icon" />
           <div className="brand">{brand}</div>
-        </div>
+        </Link>
 
         <div className="nav-right desktop-only" role="menubar">
           {links.map((link, i) => (
-            <a key={i} className="nav-link" href={link.href}>
+            <NavLink key={i} className="nav-link" to={link.href} end={link.href === "/"}>
               {link.label}
-            </a>
+            </NavLink>
           ))}
         </div>
 
@@ -75,25 +72,18 @@ export default function Navbar({
         aria-modal="true"
         aria-hidden={!open}
       >
-        <button
-          className="mobile-close-btn"
-          onClick={() => setOpen(false)}
-          aria-label="Close menu"
-        >
-          ✕
-        </button>
-
         <div className="mobile-menu-inner">
           {links.map((l, i) => (
-            <a
+            <NavLink
               key={i}
               className="mobile-link"
-              href={l.href}
+              to={l.href}
+              end={l.href === "/"}
               onClick={() => setOpen(false)}
-              style={{ transitionDelay: `${0.08 + i * 0.08}s` }} // JS fallback for stagger
+              style={{ transitionDelay: open ? `${0.12 + i * 0.07}s` : "0s" }}
             >
               {l.label}
-            </a>
+            </NavLink>
           ))}
         </div>
       </div>

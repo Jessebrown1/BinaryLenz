@@ -63,7 +63,28 @@ export default function LiquidEther({
       return tex;
     }
 
+    function makeGlyphTexture() {
+      const canvas = document.createElement('canvas');
+      canvas.width = 64;
+      canvas.height = 48;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#000';
+      ctx.fillRect(0, 0, 64, 48);
+      ctx.fillStyle = '#fff';
+      ctx.font = '34px ui-monospace, Menlo, Consolas, monospace';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('0', 16, 25);
+      ctx.fillText('1', 48, 25);
+      const tex = new THREE.CanvasTexture(canvas);
+      tex.minFilter = THREE.LinearFilter;
+      tex.magFilter = THREE.LinearFilter;
+      tex.generateMipmaps = false;
+      return tex;
+    }
+
     const paletteTex = makePaletteTexture(colors);
+    const glyphTex = makeGlyphTexture();
     const bgVec4 = new THREE.Vector4(0, 0, 0, 0); // always transparent
 
     class CommonClass {
@@ -84,9 +105,9 @@ export default function LiquidEther({
       }
       init(container) {
         this.container = container;
-        this.pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+        this.pixelRatio = Math.min(window.devicePixelRatio || 1, 1.5); // only the final pass pays for this, the simulation size ignores it
         this.resize();
-        this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        this.renderer = new THREE.WebGLRenderer({ antialias: false, alpha: true });
         this.renderer.autoClear = false;
         this.renderer.setClearColor(new THREE.Color(0x000000), 0);
         this.renderer.setPixelRatio(this.pixelRatio);
@@ -196,8 +217,9 @@ export default function LiquidEther({
       }
       onDocumentMouseMove(event) {
         if (!this.updateHoverState(event.clientX, event.clientY)) return;
+        const wasAuto = this.isAutoActive; // onInteract clears it
         if (this.onInteract) this.onInteract();
-        if (this.isAutoActive && !this.hasUserControl && !this.takeoverActive) {
+        if (wasAuto && !this.takeoverActive) {
           if (!this.container) return;
           const rect = this.container.getBoundingClientRect();
           if (rect.width === 0 || rect.height === 0) return;
@@ -262,7 +284,7 @@ export default function LiquidEther({
         this.manager = manager;
         this.enabled = opts.enabled;
         this.speed = opts.speed; // normalized units/sec
-        this.resumeDelay = opts.resumeDelay || 3000; // ms
+        this.resumeDelay = opts.resumeDelay ?? 3000; // ms
         this.rampDurationMs = (opts.rampDuration || 0) * 1000;
         this.active = false;
         this.current = new THREE.Vector2(0, 0);
@@ -286,10 +308,6 @@ export default function LiquidEther({
         const now = performance.now();
         const idle = now - this.manager.lastUserInteraction;
         if (idle < this.resumeDelay) {
-          if (this.active) this.forceStop();
-          return;
-        }
-        if (this.mouse.isHoverInside) {
           if (this.active) this.forceStop();
           return;
         }
@@ -399,14 +417,31 @@ export default function LiquidEther({
     precision highp float;
     uniform sampler2D velocity;
     uniform sampler2D palette;
+    uniform sampler2D glyphs;
     uniform vec4 bgColor;
+    uniform float time;
+    uniform float pixelRatio;
     varying vec2 uv;
+    float hash(vec2 p){
+    return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
+}
     void main(){
     vec2 vel = texture2D(velocity, uv).xy;
     float lenv = clamp(length(vel), 0.0, 1.0);
     vec3 c = texture2D(palette, vec2(lenv, 0.5)).rgb;
     vec3 outRGB = mix(bgColor.rgb, c, lenv);
     float outA = mix(bgColor.a, 1.0, lenv);
+
+    // a grid of 0s and 1s that only shows where the fluid is moving
+    vec2 grid = gl_FragCoord.xy / (vec2(12.0, 20.0) * pixelRatio);
+    vec2 cell = floor(grid);
+    float seed = hash(cell);
+    float bit = step(0.5, hash(cell + floor(time * (0.6 + seed * 2.0))));
+    float glyph = texture2D(glyphs, vec2((fract(grid.x) + bit) * 0.5, fract(grid.y))).r;
+    float digits = glyph * smoothstep(0.08, 0.45, lenv) * (0.35 + 0.65 * seed);
+    outRGB = mix(outRGB, vec3(0.96, 0.95, 0.92), digits * 0.7);
+    outA = max(outA, digits * 0.55);
+
     gl_FragColor = vec4(outRGB, outA);
 }
 `;
@@ -772,8 +807,7 @@ export default function LiquidEther({
         this.createShaderPass();
       }
       getFloatType() {
-        const isIOS = /(iPad|iPhone|iPod)/i.test(navigator.userAgent);
-        return isIOS ? THREE.HalfFloatType : THREE.FloatType;
+        return THREE.HalfFloatType;
       }
       createAllFBO() {
         const type = this.getFloatType();
@@ -900,6 +934,9 @@ export default function LiquidEther({
               velocity: { value: this.simulation.fbos.vel_0.texture },
               boundarySpace: { value: new THREE.Vector2() },
               palette: { value: paletteTex },
+              glyphs: { value: glyphTex },
+              time: { value: 0 },
+              pixelRatio: { value: Common.pixelRatio },
               bgColor: { value: bgVec4 }
             }
           })
@@ -913,6 +950,7 @@ export default function LiquidEther({
         this.simulation.resize();
       }
       render() {
+        this.output.material.uniforms.time.value = Common.time;
         Common.renderer.setRenderTarget(null);
         Common.renderer.render(this.scene, this.camera);
       }
@@ -954,13 +992,19 @@ export default function LiquidEther({
         };
         document.addEventListener('visibilitychange', this._onVisibility);
         this.running = false;
+        this.lastFrame = 0;
+        this.minFrameMs = 1000 / 60;
+        this.frameSamples = 0;
+        this.frameTotal = 0;
       }
       init() {
         this.props.$wrapper.prepend(Common.renderer.domElement);
         this.output = new Output();
       }
       resize() {
+        const { width, height } = Common;
         Common.resize();
+        if (width === Common.width && height === Common.height) return;
         this.output.resize();
       }
       render() {
@@ -971,12 +1015,36 @@ export default function LiquidEther({
       }
       loop() {
         if (!this.running) return; // safety
-        this.render();
         rafRef.current = requestAnimationFrame(this._loop);
+        const now = performance.now();
+        const elapsed = now - this.lastFrame;
+        if (elapsed < this.minFrameMs - 1) return; // cap fps on 120Hz+ screens
+        this.lastFrame = now;
+        this.render();
+        this.adaptQuality(elapsed);
+      }
+      // Slow GPU: step the simulation down instead of dragging the page with it.
+      adaptQuality(elapsed) {
+        if (elapsed > 200) return; // tab switch or stall, not a real frame time
+        this.frameSamples += 1;
+        this.frameTotal += elapsed;
+        if (this.frameSamples < 45) return;
+        const average = this.frameTotal / this.frameSamples;
+        this.frameSamples = 0;
+        this.frameTotal = 0;
+        if (average < this.minFrameMs * 1.3) return;
+        const options = this.output.simulation.options;
+        if (options.iterations_poisson > 6) {
+          options.iterations_poisson = Math.max(6, options.iterations_poisson - 3);
+        } else if (this.minFrameMs < 33) {
+          this.minFrameMs = 33; // last resort: 30fps, double dt so the motion keeps its speed
+          options.dt *= 2;
+        }
       }
       start() {
         if (this.running) return;
         this.running = true;
+        this.lastFrame = 0;
         this._loop();
       }
       pause() {
@@ -1006,15 +1074,20 @@ export default function LiquidEther({
     container.style.position = container.style.position || 'relative';
     container.style.overflow = container.style.overflow || 'hidden';
 
-    const webgl = new WebGLManager({
-      $wrapper: container,
-      autoDemo,
-      autoSpeed,
-      autoIntensity,
-      takeoverDuration,
-      autoResumeDelay,
-      autoRampDuration
-    });
+    let webgl;
+    try {
+      webgl = new WebGLManager({
+        $wrapper: container,
+        autoDemo,
+        autoSpeed,
+        autoIntensity,
+        takeoverDuration,
+        autoResumeDelay,
+        autoRampDuration
+      });
+    } catch {
+      return; // no WebGL: the plain CSS gradient behind the canvas stays
+    }
     webglRef.current = webgl;
 
     const applyOptionsFromProps = () => {
